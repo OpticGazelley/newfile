@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录</title>
+    <style>
+        body {
+            background-image: url(https://photo.tuchong.com/3033261/f/232969169.jpg);
+            background-repeat: no-repeat;
+            background-position: top center;
+            background-size: 100%;
+        }
+
+        #login-container {
+            width: 360px;
+            height: 480px;
+            box-sizing: border-box;
+            background-color: #e8f5fb;
+            padding: 20px; /* 添加内边距 */
+            border: 1px solid gray;
+            margin: 10% auto;
+        }
+
+        /* 调整输入框样式 */
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        /* 调整提交按钮样式 */
+        input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            background: blue;
+            color: #a0b6c1;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background: darkblue;
+        }
+    </style>
+</head>
+<body>
+<div id="login-container">
+    <h1 style="text-align:center;font-size: 40px;color:#1a7cc3;">登录</h1>
+    <hr style="margin-bottom: 20px;"> <!-- 添加边距 -->
+    <br><br>
+    <form method="POST" action="{{ url_for('login') }}" style="text-align:center;">
+
+        {{ form.csrf_token }}
+        <label>{{ form.username.label }}</label><br>
+        {{ form.username }}<br>
+
+        <label>{{ form.password.label }}</label><br>
+        {{ form.password }}<br><br>
+        <input type="submit" value="登录">
+    </form>
+    <br>
+    <p style="text-align:center">还没有账号？<a href="{{ url_for('register') }}">点击这里注册</a></p>
+</div>
+</body>
+</html>

@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>视频界面</title>
+    <style>
+        body {
+            background-image: url(https://img.huabaike.com/tukuimgs/818/20200923145106_852975.jpg);
+            background-repeat: no-repeat;
+            background-position: top center;
+            background-size: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* 防止页面整体横向滚动 */
+        }
+
+        .container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%; /* 调整容器宽度 */
+            height: 90%; /* 调整容器高度 */
+            background-color: #f5f5f5;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            padding: 10px;
+            display: flex; /* 使用 Flexbox 布局 */
+            flex-direction: column; /* 垂直排列子元素 */
+            transition: margin-right 0.3s ease; /* 平滑过渡 */
+            overflow-y: auto; /* 竖直方向滚动条 */
+        }
+
+        select {
+            font-size: 16px;
+            color: #333;
+            background-color: #f5f5f5;
+            border: none;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            width: 100%; /* 修改下拉列表宽度 */
+            margin-left: -10px; /* 调整左边距 */
+            padding-left: 10px; /* 调整左内边距 */
+            padding-right: 10px; /* 调整右内边距 */
+        }
+
+        .el-header {
+            background-color: #4c83cc;
+            color: #fff;
+            text-align: center; /* 让文字居中 */
+            line-height: 60px;
+        }
+
+        .el-main {
+            padding: 20px;
+            flex: 1; /* 填充剩余空间 */
+        }
+
+        .video-container {
+            text-align: center; /* 让视频和标题居中 */
+            margin-bottom: 20px; /* 添加底部间距 */
+        }
+
+        .video-container video {
+            width: 80%; /* 让视频宽度充满容器 */
+            max-width: 100%; /* 设置视频最大宽度 */
+            max-height: 400px; /* 设置视频最大高度 */
+        }
+
+        .summary-button-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .page-icon {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        button {
+            background-color: #4CAF50;
+            height:45px;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 1px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+
+        input[type="text"] {
+            width: 250px; /* 调整输入框宽度 */
+            height: 25px;
+            padding: 3px;
+            margin-bottom: 10px; /* 调整底部间距 */
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            outline: none;
+            box-sizing: border-box; /* 确保边框盒模型 */
+        }
+
+         .button-container {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .sidebar-content p {
+            margin: 0 0 10px 0;
+            padding: 10px;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+        }
+
+        .back-button {
+            height: 40px;
+            width: 100px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            text-align: center;
+            line-height: 50px;
+        }
+
+        /* 页边框的样式 */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 20%; /* 页边框宽度 */
+            height: 100%;
+            background-color: #f5f5f5;
+            box-shadow: -2px 0 5px rgba(0,0,0,0.3);
+            overflow-y: scroll; /* 纵向滚动条 */
+            padding: 10px;
+            box-sizing: border-box;
+            display: none; /* 初始状态隐藏 */
+        }
+
+        /* 页边框内容的样式 */
+        .sidebar-content {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .sidebar-content p {
+            margin: 0 0 10px 0;
+            padding: 10px;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+        }
+
+        /* 左侧询问栏样式 */
+        .ask-sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 20%; /* 设置左侧宽度 */
+            background-color: #f5f5f5;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.3);
+            overflow-y: auto; /* 纵向滚动条 */
+            padding: 10px;
+            box-sizing: border-box;
+            display: none; /* 初始状态隐藏 */
+        }
+
+        .ask-sidebar.active {
+            display: block; /* 显示左侧栏 */
+        }
+
+        .ask-content {
+            padding: 20px;
+        }
+
+        .ask-input {
+            width: 200px; /* 输入框宽度 */
+            height: 30px;
+            padding: 3px;
+            margin-bottom: 10px; /* 调整底部间距 */
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            outline: none;
+            box-sizing: border-box; /* 确保边框盒模型 */
+            text-align: left; /* 设置文本对齐方式 */
+            vertical-align: top; /* 将文字置顶 */
+            position: relative;
+        }
+
+        ::placeholder {
+            position: absolute;
+            top: 0;
+            left: 0;
+            font-size: 14px;
+            color: #999;
+        }
+
+        .ask-button {
+            height: 40px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .answer-container {
+            flex: 1;
+            padding: 10px;
+            overflow-y: auto;
+        }
+
+        .answer-container p {
+            margin: 5px 0;
+            padding: 5px;
+            background-color: #e0e0e0;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <div class="container" id="container">
+            <div class="el-aside"></div>
+            <div class="el-container">
+                <div class="el-header">
+                    <!-- 下拉菜单 -->
+                    <span>视频界面</span>
+                </div>
+                <div class="el-main">
+                    <table id="tableData">
+                        <!-- 表格数据 -->
+                    </table>
+                    <br>
+                    <div class="video-container">
+                        <h3>视频标题</h3>
+                        <video width="600" controls>
+                            <source src="{{ url_for('uploaded_file', filename=filename) }}" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
+                        <input type="hidden" id="videoFilename" value="{{ url_for('uploaded_file', filename=filename) }}">
+                        <div class="summary-button-container">
+                            <button onclick="toggleAskSidebar()">询问</button>
+                            <button onclick="toggleSidebar()">总结</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="page-icon">
+                <button class="firstPage" onclick="first_click()">首页</button>
+                <button class="beforePage" onclick="prev_click()">上一页</button>
+                <button>第<input id="currentPage" onchange="choose_page()" type="text" value="1" style="height:20px;width: 20px;text-align: center;">页</button>
+                <button>共<input id="totalPage" type="button" value="3" readonly="readonly">页</button>
+                <button class="nextPage" onclick="next_click()">下一页</button>
+                <button class="lastPage" onclick="last_click()">尾页</button>
+                <div class="back-button" onclick="goBack()">返回主界面</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页边框 -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-content" id="sidebarContent">
+            <!-- Placeholder for fetched content -->
+        </div>
+    </div>
+
+    <!-- 左侧询问栏 -->
+    <div class="ask-sidebar" id="askSidebar">
+        <div class="ask-content">
+            <input type="text" id="askInput" class="ask-input" placeholder="请输入您的问题"><br>
+            <button onclick="askQuestion()" class="ask-button">询问</button>
+            <div class="answer-container" id="answerContainer">
+                <!-- 答案内容 -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var page_index = ["page-1", "page-2", "page-3"];
+
+        // 输入pagename，打开指定的div，隐藏其他的div
+        function page_option(pagename) {
+            var tar_index = page_index.indexOf(pagename);
+            page_index.splice(tar_index, 1);
+            for (var j = 0; j < page_index.length; j++) {
+                var close_div = document.getElementsByClassName(page_index[j]);
+                for (var i = 0; i < close_div.length; i++) {
+                    close_div[i].style.display = "none";
+                }
+            }
+
+            var opendiv = document.getElementsByClassName(pagename);
+            for (var i = 0; i < opendiv.length; i++) {
+                opendiv[i].style.display = "block";
+            }
+        }
+
+        // 点击 返回第一页按钮 执行的操作
+        function first_click() {
+            page_option("page-1");
+            document.getElementById('currentPage').value = 1;
+        }
+
+        // 点击 跳到最后一页按钮 执行的操作
+        function last_click() {
+            var total_page = document.getElementById('totalPage').value;
+            page_option(page_index[page_index.length - 1]);
+            document.getElementById('currentPage').value = total_page;
+        }
+
+        // 点击 上一页按钮 执行的操作
+        function prev_click() {
+            var cur_page = document.getElementById('currentPage').value;
+            if (cur_page > 1) {
+                document.getElementById('currentPage').value = parseInt(cur_page) - 1;
+                var pagename = page_index[parseInt(cur_page) - 2];
+                page_option(pagename);
+            }
+        }
+
+        // 点击 下一页按钮 执行的操作
+        function next_click() {
+            var cur_page = document.getElementById('currentPage').value;
+            var total_page = document.getElementById('totalPage').value;
+            if (cur_page < total_page) {
+                document.getElementById('currentPage').value = parseInt(cur_page) + 1;
+                var pagename = page_index[parseInt(cur_page)];
+                page_option(pagename);
+            }
+        }
+
+        // 手动改变当前页码时执行的操作
+        function choose_page() {
+            var cur_page = document.getElementById('currentPage').value;
+            var pagename = page_index[parseInt(cur_page) - 1];
+            page_option(pagename);
+        }
+
+        // 切换页边框的显示和隐藏
+        function toggleSidebar() {
+            console.log('toggleSidebar函数开始运行');
+            var sidebar = document.getElementById('sidebar');
+            var container = document.getElementById('container');
+            console.log('sidebar:', sidebar);
+            console.log('container:', container);
+            if (sidebar.style.display === "none" || sidebar.style.display === "") {
+                sidebar.style.display = "block";
+                container.style.marginRight = "20%"; /* 页边框宽度的宽度 */
+                console.log('页边栏显示');
+            } else {
+                sidebar.style.display = "none";
+                container.style.marginRight = "0";
+                console.log('页边栏隐藏');
+            }
+
+            sendVideoFilename(); // 将视频参数传送出去
+            console.log('视频参数传递成功');
+        }
+
+        // 切换左侧询问栏的显示和隐藏
+        function toggleAskSidebar() {
+            var askSidebar = document.getElementById('askSidebar');
+            if (!askSidebar.classList.contains("active")) {
+                askSidebar.classList.add("active");
+            } else {
+                askSidebar.classList.remove("active");
+            }
+        }
+
+        // 询问问题
+        async function askQuestion() {
+            var question = document.getElementById('askInput').value; // 获取输入的问题
+            var answerContainer = document.getElementById('answerContainer');
+            // 在控制台输出用户想问的问题
+            console.log('用户输入的问题:', question);
+
+            try {
+                var response = await fetch('/ask_to_spark', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ question: question }) // 将问题作为 JSON 数据发送
+                });
+
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+
+                var data = await response.json(); // 解析服务器端返回的 JSON 数据
+                var answer = data.answer; // 获取 AI 的回答
+
+                var answerParagraph = document.createElement('p');
+                answerParagraph.textContent = answer;
+                answerContainer.innerHTML = ''; // 清空之前的答案
+                answerContainer.appendChild(answerParagraph);
+            } catch (error) {
+                console.error('Error asking question:', error);
+            }
+        }
+
+        // Fetch content from ai.txt and insert into sidebar content
+        fetch("{{ url_for('static', filename='ai.txt') }}")
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.text();
+            })
+            .then(data => {
+                console.log('Fetched content:', data); // Output content to console
+                var sidebarContent = document.getElementById('sidebarContent');
+                sidebarContent.innerHTML = '<p>' + data + '</p>'; // Insert content into sidebar
+            })
+            .catch(error => console.error('Error fetching content:', error));
+
+        // 定期检查注意力状态
+        function checkAttention() {
+            fetch('/check_attention')
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.attention) {
+                        alert('你应该专注学习');
+                    }
+                })
+                .catch(error => console.error('Error checking attention:', error));
+        }
+
+        function sendVideoFilename() {
+            console.log('sendVideoFilename函数开始运行');
+            const filename = document.getElementById('videoFilename').value;
+            console.log('视频参数:', filename);
+
+            fetch('/analyze_video', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ filename: filename }),
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Success:', data);
+                // 处理返回的数据，比如显示结果
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        }
+
+        setInterval(checkAttention, 30000);
+
+        function goBack() {
+            window.history.back();
+        }
+    </script>
+</body>
+</html>

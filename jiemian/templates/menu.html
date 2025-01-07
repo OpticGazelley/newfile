@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>主界面</title>
+    <style>
+        body {
+            background-image: url(https://proxyimg.sucai999.com/preimg/DBC456/700/DBC456/145/63f05ba2883b1f1f94da6c464f9b4de.jpg);
+            background-repeat: no-repeat;
+            background-position: top center;
+            background-size: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden; /* 防止页面整体横向滚动 */
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+
+        h1 {
+            font-size: 4em;
+            margin: 20px 0;
+        }
+
+        .search-box {
+            margin: 20px 0;
+            display: flex;
+        }
+
+        input[type="text"] {
+            width: 300px;
+            padding: 10px;
+            border: none;
+            border-radius: 5px 0 0 5px;
+            font-size: 1em;
+        }
+
+        .search-button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 0 5px 5px 0;
+            background-color: rgba(255, 255, 255, 0.8);
+            color: #333;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .search-button:hover {
+            background-color: rgba(255, 255, 255, 1);
+        }
+
+        .buttons {
+            margin: 20px 0;
+            display: flex;
+            gap: 10px;
+        }
+
+        .buttons button {
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            background-color: rgba(255, 255, 255, 0.8);
+            color: #333;
+            font-size: 1em;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .buttons button:hover {
+            background-color: rgba(255, 255, 255, 1);
+        }
+
+        .exit-button {
+            position: absolute;
+            top: 0;
+            right: 0;
+            height: 60px;
+            width: 100px;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            text-align: center;
+        }
+
+        .exit-button:hover {
+            background-color: rgba(255, 255, 255, 1);
+        }
+
+        .video-button {
+            margin-top: 30px;
+        }
+
+        .video-button img {
+            width: 300px;
+            height: 200px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .video-button img:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <h1>主界面</h1>
+    <div class="search-box">
+        <input type="text" id="searchInput" placeholder="搜索...">
+        <button class="search-button" onclick="handleSearchClick()">查询</button>
+    </div>
+    <div class="buttons">
+        <button onclick="handleButtonClick1()">上传视频 </button>
+        <button class="exit-button" onclick="handleExitClick()">退出</button>
+    </div>
+    <div class="video-button">
+        {% for video in videos %}
+            <a href="{{ url_for('video', filename=video) }}">
+                <img src="https://tse4-mm.cn.bing.net/th/id/OIP-C.QxZvr3VLPk5DAYACK2GRaAHaFX?w=254&h=184&c=7&r=0&o=5&dpr=1.3&pid=1.7" alt="{{ video }}">
+            </a>
+        {% endfor %}
+    </div>
+    <script>
+        function handleSearchClick() {
+            // 查询按钮点击事件处理函数
+            //alert("查询按钮被点击");
+            // 获取搜索框的值
+            var searchText = document.getElementById("searchInput").value;
+            // 检查是否为空
+            if (searchText.trim() !== "") {
+                // 跳转到搜索结果页面，这里需要根据实际情况替换为正确的搜索地址
+                window.location.href = "http://" + encodeURIComponent(searchText);
+            } else {
+                alert("请输入搜索内容");
+            }
+        }
+
+        function handleButtonClick1() {
+            // 功能按钮点击事件处理函数 alert("功能按钮被点击");数
+             var url = "http://127.0.0.1:5000/upload";
+            // 使用window.location.href进行页面跳转
+            window.location.href = url;
+        }
+
+        function handleButtonClick2() {
+            // 功能按钮点击事件处理函数 alert("功能按钮被点击");数
+             var url = "{{url_for('index', filename=index)}}";
+            // 使用window.location.href进行页面跳转
+            window.location.href = url;
+        }
+
+        function handleExitClick() {
+            // 功能按钮点击事件处理函数 alert("功能按钮被点击");数
+            var url = "http://127.0.0.1:5000/login";
+            // 弹出确认对话框
+            var result = confirm("您确定要退出吗？");
+
+            // 如果用户点击了确定按钮
+            if (result) {
+                window.location.href = url;
+            } else {
+                // 用户点击了取消按钮，不执行任何操作
+            }
+        }
+    </script>
+</body>
+</html>
